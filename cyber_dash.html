@@ -22,102 +22,158 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0b0d;font-family:
 #c{display:block;width:100%;height:100%;}
 
 /* ── HUD ── */
-#hud{position:fixed;inset:0;pointer-events:none;z-index:10;}
+#hud{position:fixed;inset:0;pointer-events:none;z-index:10;
+  background: radial-gradient(circle at center, transparent 40%, rgba(3,4,6,0.6) 100%);}
 #hud *{pointer-events:auto;}
 
 /* Header bar */
-#hdr{position:absolute;top:0;left:0;right:0;height:36px;padding:0 16px;
+#hdr{position:absolute;top:0;left:0;right:0;height:40px;padding:0 24px;
   display:flex;align-items:center;justify-content:space-between;
-  background:rgba(17,18,20,.95);border-bottom:1px solid var(--border);}
-#logo{font-family:var(--fm);font-size:.7rem;font-weight:600;color:var(--white);
-  letter-spacing:.2em;text-transform:uppercase;}
-#logo span{color:var(--txt3);font-weight:400;letter-spacing:.1em;margin-left:8px;font-size:.6rem;}
-.hgroup{display:flex;align-items:center;gap:16px;}
-.hinfo{font-family:var(--fm);font-size:.6rem;color:var(--txt3);}
-.hinfo b{color:var(--txt2);}
-#clock{font-family:var(--fm);font-size:.65rem;color:var(--txt2);letter-spacing:.05em;}
-.status-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;}
-.status-dot.live{background:var(--green);}
-.status-dot.off{background:var(--red);}
+  background:linear-gradient(90deg, rgba(8,10,14,0.9) 0%, rgba(5,6,9,0.95) 50%, rgba(8,10,14,0.9) 100%);
+  border-bottom:1px solid rgba(88,166,255,0.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);}
+#logo{font-family:var(--fm);font-size:.75rem;font-weight:600;color:var(--white);
+  letter-spacing:.25em;text-transform:uppercase; text-shadow: 0 0 10px rgba(255,255,255,0.2);}
+#logo span{color:#58a6ff;font-weight:500;letter-spacing:.15em;margin-left:12px;font-size:.65rem;
+  padding-left:12px; border-left:1px solid rgba(88,166,255,0.3);}
+.hgroup{display:flex;align-items:center;gap:24px;}
+.hinfo{font-family:var(--fm);font-size:.6rem;color:var(--txt2); letter-spacing:.05em;}
+.hinfo b{color:#58a6ff;font-weight:600;}
+#clock{font-family:var(--fm);font-size:.7rem;color:#58a6ff;letter-spacing:.1em; font-weight:600; text-shadow: 0 0 8px rgba(88,166,255,0.4);}
+.status-dot{width:6px;height:6px;border-radius:1px;display:inline-block;margin-right:6px; box-shadow: 0 0 8px currentColor;}
+.status-dot.live{background:var(--green); color:var(--green);}
+.status-dot.off{background:var(--red); color:var(--red);}
 
 /* Camera controls */
-#cam-bar{position:absolute;top:48px;right:12px;display:flex;flex-direction:column;gap:3px;}
-.cvbtn{background:var(--bg2);border:1px solid var(--border);
-  color:var(--txt2);padding:4px 10px;border-radius:3px;
-  font-family:var(--fm);font-size:.52rem;letter-spacing:.08em;
-  cursor:pointer;transition:all .15s;text-align:center;text-transform:uppercase;}
-.cvbtn:hover{background:var(--bg3);border-color:var(--border2);color:var(--white);}
-.cvbtn.act{background:var(--bg4);border-color:var(--border2);color:var(--white);}
+#cam-bar { position:absolute; top:52px; left:24px; display:flex; gap:8px; flex-wrap:wrap; z-index:10; max-width:calc(100% - 48px); }
+.cvbtn{background:rgba(13,17,22,0.8);border:1px solid rgba(88,166,255,0.2);
+  color:var(--txt2);padding:6px 14px;border-radius:2px;
+  font-family:var(--fm);font-size:.55rem;letter-spacing:.12em;font-weight:500;
+  cursor:pointer;transition:all .2s;text-align:center;text-transform:uppercase;
+  backdrop-filter:blur(4px);}
+.cvbtn:hover{background:rgba(33,38,45,0.9);border-color:#58a6ff;color:var(--white); box-shadow: 0 0 10px rgba(88,166,255,0.2);}
+.cvbtn.act{background:rgba(22,27,34,0.9);border-color:#58a6ff;color:#58a6ff; font-weight:600; box-shadow: inset 0 0 8px rgba(88,166,255,0.1);}
+
+.dlbtn{background:rgba(226,160,63,0.1);border:1px solid rgba(226,160,63,0.4);
+  color:var(--amber);padding:4px 10px;border-radius:2px;
+  font-family:var(--fm);font-size:.55rem;letter-spacing:.12em;font-weight:600;
+  cursor:pointer;transition:all .2s;text-align:center;text-transform:uppercase;
+  text-decoration:none;display:inline-flex;align-items:center;height:24px; margin-right: 12px;}
+.dlbtn:hover{background:rgba(226,160,63,0.2);color:var(--white); box-shadow: 0 0 10px rgba(226,160,63,0.3);}
 
 /* Primary panel */
-#ps{position:absolute;bottom:10px;left:10px;width:240px;
-  background:rgba(17,18,20,.94);border:1px solid var(--border);
-  border-radius:4px;backdrop-filter:blur(12px);overflow:hidden;}
-#ps-hdr{padding:7px 12px;border-bottom:1px solid var(--border);
-  font-family:var(--fm);font-size:.52rem;font-weight:600;letter-spacing:.15em;
-  color:var(--txt2);text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
-#ps-body{padding:8px 12px;max-height:420px;overflow-y:auto;}
-.prow{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.62rem;
-  padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);}
-.plab{color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;font-size:.52rem;}
+#ps{position:absolute;bottom:20px;left:20px;width:280px;
+  background:rgba(8,10,14,0.85);border:1px solid rgba(88,166,255,0.15);
+  border-radius:2px;backdrop-filter:blur(16px);overflow:hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);}
+#ps::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg, transparent, #58a6ff, transparent); opacity:0.5; }
+#ps-hdr{padding:10px 16px;border-bottom:1px solid rgba(88,166,255,0.1);
+  font-family:var(--fm);font-size:.55rem;font-weight:600;letter-spacing:.2em;
+  color:#58a6ff;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
+#ps-body{padding:12px 16px;max-height:480px;overflow-y:auto;}
+.prow{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.65rem;
+  padding:4px 0;}
+.plab{color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-size:.55rem;}
 .pval{color:var(--txt);font-weight:500;}
-.pbar{height:2px;background:var(--bg4);border-radius:1px;margin:3px 0 4px 0;overflow:hidden;}
-.pbf{height:100%;border-radius:1px;transition:width .8s ease;}
+.pbar{height:1px;background:rgba(255,255,255,0.05);border-radius:0;margin:4px 0 8px 0;overflow:hidden;}
+.pbf{height:100%;border-radius:0;transition:width .8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 0 4px currentColor;}
 
 /* Server detail panel */
-#sdp{position:absolute;top:48px;right:12px;width:240px;
-  background:rgba(17,18,20,.96);border:1px solid var(--border);
-  border-radius:4px;display:none;backdrop-filter:blur(12px);overflow:hidden;}
-#sdp-hdr{padding:7px 12px;border-bottom:1px solid var(--border);
+#sdp{position:absolute;top:60px;right:20px;width:280px;
+  background:rgba(8,10,14,0.9);border:1px solid rgba(88,166,255,0.2);
+  border-radius:2px;display:none;backdrop-filter:blur(16px);overflow:hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);}
+#sdp::before { content:''; position:absolute; top:0; left:0; bottom:0; width:1px; background:linear-gradient(180deg, transparent, #58a6ff, transparent); opacity:0.5; }
+#sdp-hdr{padding:10px 16px;border-bottom:1px solid rgba(88,166,255,0.1);
   display:flex;justify-content:space-between;align-items:center;}
-#sdp-title{font-family:var(--fm);font-size:.62rem;font-weight:600;color:var(--white);letter-spacing:.1em;}
-#sdp-close{font-family:var(--fm);font-size:.55rem;color:var(--txt3);cursor:pointer;}
+#sdp-title{font-family:var(--fm);font-size:.68rem;font-weight:600;color:var(--white);letter-spacing:.15em;}
+#sdp-close{font-family:var(--fm);font-size:.6rem;color:var(--txt3);cursor:pointer; transition:color 0.2s;}
 #sdp-close:hover{color:var(--red);}
-#sdp-meta{padding:4px 12px;font-family:var(--fm);font-size:.52rem;color:var(--txt3);
-  border-bottom:1px solid var(--border);}
-#sdp-body{padding:8px 12px;max-height:500px;overflow-y:auto;}
-.drow{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.6rem;
-  padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);}
-.dlab{color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;font-size:.5rem;}
-.dval{font-weight:500;}
-.dbadge{display:inline-block;font-family:var(--fm);font-size:.48rem;font-weight:600;
-  padding:1px 6px;border-radius:2px;letter-spacing:.08em;text-transform:uppercase;}
-.b-ok{background:var(--green2);color:var(--green);border:1px solid rgba(46,204,113,.3);}
-.b-wn{background:var(--amber2);color:var(--amber);border:1px solid rgba(226,160,63,.3);}
-.b-cr{background:var(--red2);color:var(--red);border:1px solid rgba(217,64,82,.3);}
+#sdp-meta{padding:8px 16px;font-family:var(--fm);font-size:.55rem;color:var(--txt2);
+  border-bottom:1px solid rgba(88,166,255,0.05); background:rgba(0,0,0,0.2);}
+#sdp-body{padding:12px 16px;max-height:500px;overflow-y:auto;}
+.drow{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.65rem;
+  padding:4px 0; border-bottom:1px dashed rgba(255,255,255,0.03);}
+.dlab{color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-size:.55rem;}
+.dval{font-weight:500; font-variant-numeric: tabular-nums;}
+.dbadge{display:inline-block;font-family:var(--fm);font-size:.5rem;font-weight:600;
+  padding:2px 8px;border-radius:1px;letter-spacing:.15em;text-transform:uppercase;}
+.b-ok{background:rgba(46,204,113,.1);color:var(--green);border:1px solid rgba(46,204,113,.4); box-shadow: 0 0 10px rgba(46,204,113,.1);}
+.b-wn{background:rgba(226,160,63,.1);color:var(--amber);border:1px solid rgba(226,160,63,.4); box-shadow: 0 0 10px rgba(226,160,63,.1);}
+.b-cr{background:rgba(217,64,82,.1);color:var(--red);border:1px solid rgba(217,64,82,.4); box-shadow: 0 0 10px rgba(217,64,82,.1);}
 
 /* Tooltip */
-#tip{position:absolute;background:rgba(17,18,20,.95);border:1px solid var(--border);
-  border-radius:3px;padding:7px 10px;font-family:var(--fm);font-size:.58rem;
+#tip{position:absolute;background:rgba(8,10,14,.95);border:1px solid rgba(88,166,255,0.3);
+  border-left:2px solid #58a6ff;
+  border-radius:0;padding:8px 12px;font-family:var(--fm);font-size:.6rem;
   pointer-events:none;display:none;color:var(--txt);white-space:nowrap;
-  backdrop-filter:blur(8px);max-width:280px;}
-#tip .tl{color:var(--txt3);font-size:.5rem;letter-spacing:.05em;text-transform:uppercase;}
-#tip .tv{color:var(--white);font-weight:500;margin-left:4px;}
+  backdrop-filter:blur(8px);max-width:300px; box-shadow: 0 4px 16px rgba(0,0,0,0.5);}
+#tip .tl{color:var(--txt3);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;}
+#tip .tv{color:var(--white);font-weight:600;margin-left:6px;}
 
 /* Controls help */
-#chelp{position:absolute;bottom:10px;right:10px;
-  background:rgba(17,18,20,.85);border:1px solid var(--border);
-  border-radius:3px;padding:7px 10px;font-family:var(--fm);font-size:.52rem;color:var(--txt3);}
-#chelp div:first-child{font-weight:600;letter-spacing:.1em;margin-bottom:4px;color:var(--txt2);font-size:.48rem;}
-.ch{margin:2px 0;}.chk{color:var(--txt2);margin-right:5px;font-weight:500;}
+#chelp{position:absolute;bottom:20px;right:20px;
+  background:rgba(8,10,14,.8);border:1px solid rgba(88,166,255,0.15);
+  border-radius:2px;padding:10px 14px;font-family:var(--fm);font-size:.55rem;color:var(--txt3);
+  backdrop-filter:blur(8px);}
+#chelp div:first-child{color:#58a6ff;font-weight:600;letter-spacing:.2em;margin-bottom:6px;font-size:.5rem;}
+.ch{margin:3px 0;}.chk{color:var(--white);margin-right:8px;font-weight:600;}
 
 /* Legend */
-#legend{position:absolute;bottom:10px;left:260px;
-  background:rgba(17,18,20,.85);border:1px solid var(--border);
-  border-radius:3px;padding:7px 10px;font-family:var(--fm);font-size:.52rem;}
-#legend div:first-child{color:var(--txt2);font-weight:600;letter-spacing:.1em;margin-bottom:4px;font-size:.48rem;}
-.leg{display:flex;align-items:center;gap:6px;margin:2px 0;}
-.legdot{width:6px;height:6px;border-radius:1px;flex-shrink:0;}
-.legtext{color:var(--txt3);}
+#legend{position:absolute;bottom:20px;left:320px;
+  background:rgba(8,10,14,.8);border:1px solid rgba(88,166,255,0.15);
+  border-radius:2px;padding:10px 14px;font-family:var(--fm);font-size:.55rem;
+  backdrop-filter:blur(8px);}
+#legend div:first-child{color:#58a6ff;font-weight:600;letter-spacing:.2em;margin-bottom:6px;font-size:.5rem;}
+.leg{display:flex;align-items:center;gap:8px;margin:3px 0;}
+.legdot{width:6px;height:6px;border-radius:1px;flex-shrink:0; box-shadow: 0 0 6px currentColor;}
+.legtext{color:var(--txt2); letter-spacing:0.05em;}
 
 /* Connection */
 #conn{position:absolute;top:1px;left:50%;transform:translateX(-50%);
-  font-family:var(--fm);font-size:.55rem;color:var(--txt3);
-  display:flex;align-items:center;gap:5px;height:34px;}
+  font-family:var(--fm);font-size:.55rem;color:var(--txt2);
+  display:flex;align-items:center;gap:6px;height:38px;
+  border-left:1px dashed rgba(255,255,255,0.1); border-right:1px dashed rgba(255,255,255,0.1); padding:0 16px;}
 
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:1px;}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  #hdr { padding: 0 12px; }
+  #logo { font-size: 0.65rem; }
+  #logo span { display: none; }
+  #conn { right: 12px; left: auto; transform: none; border-left: none; border-right: none; padding: 0; }
+  
+  .hgroup { gap: 10px; }
+  .dlbtn { margin-right: 0; padding: 4px 6px; font-size: 0.5rem; }
+  .hinfo { display: none; }
+  
+  #cam-bar { top: 48px; left: 12px; gap: 6px; max-width: calc(100% - 24px); }
+  .cvbtn { padding: 5px 8px; font-size: 0.5rem; }
+
+  #ps { bottom: 12px; left: 12px; width: calc(100% - 24px); z-index: 5; }
+  #ps-body { max-height: 220px; }
+
+  #sdp { top: 48px; left: 12px; width: calc(100% - 24px); z-index: 20; }
+  #sdp-body { max-height: calc(100vh - 120px); }
+
+  #legend, #chelp, #tip { display: none !important; }
+}
+
+@media (max-width: 480px) {
+  #hdr { height: auto; padding: 8px 12px; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+  #logo { width: 100%; text-align: center; margin-bottom: 2px; font-size: 0.75rem; }
+  #conn { position: relative; right: auto; top: auto; width: 45%; justify-content: flex-start; margin: 0; }
+  .hgroup { width: auto; justify-content: flex-end; margin: 0; }
+  #clock { display: none; }
+  #cam-bar { top: 82px; left: 6px; max-width: calc(100% - 12px); justify-content: center; }
+  #sdp { top: 82px; left: 6px; width: calc(100% - 12px); }
+  #ps { bottom: 6px; left: 6px; width: calc(100% - 12px); }
+  #ps-body { max-height: 180px; }
+}
 </style>
 </head>
 <body>
@@ -129,6 +185,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0b0d;font-family:
     <div id="logo">DATACENTER OPS<span>Infrastructure Monitor</span></div>
     <div id="conn"><span class="status-dot live" id="conn-dot"></span><span id="conn-txt">Connecting…</span></div>
     <div class="hgroup">
+      <a href="/api/export" class="dlbtn" download="telemetry_dataset.csv">↓ DATASET CSV</a>
       <span class="hinfo" id="h-host">—</span>
       <span id="clock" style="min-width:60px;text-align:right">--:--:--</span>
     </div>
@@ -193,29 +250,43 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0b0d;font-family:
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 // ── State ──
 const S = { servers:[], host:null, rackMeshes:[], selectedIdx:-1, autoOrbit:false };
 
 // ── Renderer ──
 const W=window.innerWidth, H=window.innerHeight;
-const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'), antialias:true});
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'), antialias:true, powerPreference:"high-performance"});
 renderer.setSize(W,H); renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=0.65;
+renderer.toneMapping=THREE.ReinhardToneMapping; renderer.toneMappingExposure=1.2;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0a0b0d);
-scene.fog = new THREE.Fog(0x0a0b0d, 20, 50);
+scene.background = new THREE.Color(0x050507);
+scene.fog = new THREE.FogExp2(0x050507, 0.025);
 
 const camera = new THREE.PerspectiveCamera(55, W/H, 0.1, 200);
 camera.position.set(0, 9, 18);
 
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping=true; controls.dampingFactor=0.08;
-controls.minDistance=4; controls.maxDistance=40;
-controls.maxPolarAngle=Math.PI/2+0.05;
-controls.target.set(0,1.5,0);
+controls.enableDamping=true; controls.dampingFactor=0.05;
+controls.minDistance=2; controls.maxDistance=50;
+controls.maxPolarAngle=Math.PI/2 - 0.01;
+controls.target.set(0,2,0);
+
+// Post-Processing (Bloom)
+const renderScene = new RenderPass(scene, camera);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(W, H), 1.5, 0.4, 0.85);
+bloomPass.threshold = 0.2;
+bloomPass.strength = 1.8;
+bloomPass.radius = 0.5;
+
+const composer = new EffectComposer(renderer);
+composer.addPass(renderScene);
+composer.addPass(bloomPass);
 
 // ── Colors ──
 function statusColor(srv){
@@ -238,111 +309,115 @@ function badgeText(srv){
 }
 
 // ── Room ──
-const RW=28,RD=22,RH=8;
+const RW=32,RD=26,RH=10;
 function buildRoom(){
-  // Floor
+  // Reflective Floor
   const fg=new THREE.PlaneGeometry(RW,RD);
-  const fm=new THREE.MeshStandardMaterial({color:0x0d0e10,roughness:0.95,metalness:0.1});
+  const fm=new THREE.MeshStandardMaterial({color:0x050608,roughness:0.2,metalness:0.8});
   const f=new THREE.Mesh(fg,fm); f.rotation.x=-Math.PI/2; f.receiveShadow=true; scene.add(f);
 
-  // Subtle grid
-  const grid=new THREE.GridHelper(RW,40,0x1a1c20,0x141518);
-  grid.position.y=0.005; scene.add(grid);
+  // High-tech floor grid
+  const grid=new THREE.GridHelper(RW,64,0x111b24,0x090c12);
+  grid.position.y=0.01; scene.add(grid);
 
-  // Walls (very dark, barely visible)
-  const wm=new THREE.MeshStandardMaterial({color:0x0e0f12,roughness:0.95,metalness:0.05});
+  // Glowing floor conduits
+  const cm=new THREE.MeshBasicMaterial({color:0x3b82c4});
+  for(let x=-10;x<=10;x+=5){
+    const c=new THREE.Mesh(new THREE.PlaneGeometry(0.05,RD),cm);
+    c.rotation.x=-Math.PI/2; c.position.set(x,0.015,0); scene.add(c);
+  }
+  for(let z=-10;z<=10;z+=5){
+    if(z===0)continue;
+    const c=new THREE.Mesh(new THREE.PlaneGeometry(RW,0.05),cm);
+    c.rotation.x=-Math.PI/2; c.position.set(0,0.015,z); scene.add(c);
+  }
+
+  // Dark environment boundaries
+  const wm=new THREE.MeshStandardMaterial({color:0x030304,roughness:0.9,metalness:0.1});
   [{w:RW,h:RH,p:[0,RH/2,-RD/2],r:0},{w:RW,h:RH,p:[0,RH/2,RD/2],r:Math.PI},
    {w:RD,h:RH,p:[-RW/2,RH/2,0],r:Math.PI/2},{w:RD,h:RH,p:[RW/2,RH/2,0],r:-Math.PI/2}
   ].forEach(({w,h,p,r})=>{
     const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),wm);
-    m.position.set(...p); m.rotation.y=r; m.receiveShadow=true; scene.add(m);
+    m.position.set(...p); m.rotation.y=r; scene.add(m);
   });
-
-  // Ceiling
-  const cm=new THREE.MeshStandardMaterial({color:0x0c0d0f,roughness:0.95});
-  const c=new THREE.Mesh(new THREE.PlaneGeometry(RW,RD),cm);
-  c.rotation.x=Math.PI/2; c.position.y=RH; scene.add(c);
-
-  // Ceiling light strips (white, industrial)
-  const sm=new THREE.MeshBasicMaterial({color:0xd4d6da});
-  for(let z=-7;z<=7;z+=7){
-    const s=new THREE.Mesh(new THREE.BoxGeometry(RW-4,0.03,0.08),sm);
-    s.position.set(0,RH-0.02,z); scene.add(s);
-  }
 }
 
-// ── Lights (neutral white, industrial) ──
+// ── Lights (moody, cyber) ──
 function buildLights(){
-  scene.add(new THREE.AmbientLight(0x1a1c22,3.0));
-  const dl=new THREE.DirectionalLight(0xd0d4dc,2.0);
-  dl.position.set(4,14,6); dl.castShadow=true;
-  dl.shadow.mapSize.set(2048,2048); dl.shadow.camera.far=50; scene.add(dl);
-
-  // Overhead white spots
-  [[-8,RH-0.5,-5],[0,RH-0.5,0],[8,RH-0.5,-5],[-8,RH-0.5,5],[8,RH-0.5,5]].forEach(([x,y,z])=>{
-    const pl=new THREE.PointLight(0xcdd0d8,3,18);
-    pl.position.set(x,y,z); scene.add(pl);
-  });
+  scene.add(new THREE.AmbientLight(0x0a121a, 2.0));
+  const dl=new THREE.DirectionalLight(0x406080, 1.5);
+  dl.position.set(-5, 12, 8); dl.castShadow=true;
+  dl.shadow.mapSize.set(2048,2048); scene.add(dl);
 }
 
 // ── Server Rack Models ──
-const RKW=1.0,RKH=2.2,RKD=0.9;
-const rackGroups=[],rackLights=[],rackLEDs=[];
+const RKW=1.1,RKH=2.4,RKD=1.0;
+const rackGroups=[],rackLights=[],rackLEDs=[], blinkers=[];
 
 function buildRacks(){
   const pos=[];
-  for(let r=0;r<3;r++) for(let c=0;c<3;c++) pos.push({x:(c-1)*4.0,z:(r-1)*5.0});
+  for(let r=0;r<3;r++) for(let c=0;c<3;c++) pos.push({x:(c-1)*4.5,z:(r-1)*5.5});
 
   pos.forEach((p,i)=>{
     const grp=new THREE.Group(); grp.position.set(p.x,0,p.z); grp.userData={idx:i};
 
-    // Dark metal body
-    const body=new THREE.Mesh(
+    // Dark metallic frame
+    const frame=new THREE.Mesh(
       new THREE.BoxGeometry(RKW,RKH,RKD),
-      new THREE.MeshStandardMaterial({color:0x1a1c20,roughness:0.6,metalness:0.7})
+      new THREE.MeshStandardMaterial({color:0x0d1116,roughness:0.3,metalness:0.8})
     );
-    body.position.y=RKH/2; body.castShadow=true; body.receiveShadow=true;
-    body.userData={idx:i,type:'rack'}; grp.add(body);
+    frame.position.y=RKH/2; frame.castShadow=true;
+    frame.userData={idx:i,type:'rack'}; grp.add(frame);
 
-    // Front panel (slightly lighter)
-    const fp=new THREE.Mesh(
-      new THREE.BoxGeometry(RKW-0.04,RKH-0.04,0.02),
-      new THREE.MeshStandardMaterial({color:0x1e2024,roughness:0.4,metalness:0.85})
+    // Dark glass front door
+    const glass=new THREE.Mesh(
+      new THREE.BoxGeometry(RKW-0.08,RKH-0.1,0.02),
+      new THREE.MeshPhysicalMaterial({
+        color:0x111b24, metalness:0.9, roughness:0.1,
+        transparent:true, opacity:0.4, transmission:0.5, clearcoat:1.0
+      })
     );
-    fp.position.set(0,RKH/2,RKD/2+0.01); fp.userData={idx:i,type:'rack'}; grp.add(fp);
+    glass.position.set(0,RKH/2,RKD/2+0.02);
+    glass.userData={idx:i,type:'rack'}; grp.add(glass);
 
-    // 1U server slabs
-    for(let u=0;u<8;u++){
+    // Inner servers & glowing LEDs
+    for(let u=0;u<10;u++){
+      const uy=0.25+u*0.22;
+      // Server chassis
       const us=new THREE.Mesh(
-        new THREE.BoxGeometry(RKW-0.08,0.18,0.04),
-        new THREE.MeshStandardMaterial({color:0x16181c,roughness:0.3,metalness:0.9})
+        new THREE.BoxGeometry(RKW-0.12,0.15,RKD-0.2),
+        new THREE.MeshStandardMaterial({color:0x080a0c,roughness:0.5})
       );
-      us.position.set(0,0.22+u*0.25,RKD/2+0.02); us.userData={idx:i,type:'rack'}; grp.add(us);
+      us.position.set(0,uy,0); grp.add(us);
+      
+      // Blinking activity LEDs
+      for(let l=0;l<3;l++){
+        const led=new THREE.Mesh(
+          new THREE.BoxGeometry(0.04,0.02,0.02),
+          new THREE.MeshBasicMaterial({color:0x3b82c4}) // default blue
+        );
+        led.position.set((RKW/2)-0.15-(l*0.06), uy, RKD/2-0.08);
+        grp.add(led);
+        blinkers.push({m:led, baseColor:0x3b82c4, timer:Math.random(), speed:1+Math.random()*3});
+      }
     }
 
-    // Status LED (small, top)
-    const led=new THREE.Mesh(
-      new THREE.BoxGeometry(0.06,0.06,0.03),
+    // Top Header / Warning Light (Emissive)
+    const topStrip=new THREE.Mesh(
+      new THREE.BoxGeometry(RKW-0.04,0.04,0.04),
       new THREE.MeshBasicMaterial({color:0x2ecc71})
     );
-    led.position.set(RKW/2-0.08,RKH+0.08,RKD/2); grp.add(led); rackLEDs.push(led);
+    topStrip.position.set(0,RKH-0.04,RKD/2+0.01); grp.add(topStrip); rackLEDs.push(topStrip);
 
-    // Top edge strip (status color, thin)
-    const strip=new THREE.Mesh(
-      new THREE.BoxGeometry(RKW,0.02,RKD),
-      new THREE.MeshBasicMaterial({color:0x2ecc71})
-    );
-    strip.position.y=RKH+0.01; grp.add(strip);
+    // Intense point light for glow casting
+    const pl=new THREE.PointLight(0x2ecc71,1.5,5);
+    pl.position.set(p.x,RKH-0.5,p.z+RKD/2+0.2); scene.add(pl); rackLights.push(pl);
 
-    // Subtle point light
-    const pl=new THREE.PointLight(0x2ecc71,0.6,4);
-    pl.position.set(p.x,RKH+0.4,p.z); scene.add(pl); rackLights.push(pl);
+    // Holographic Label
+    const lbl=makeLabel(`VS ${String(i+1).padStart(2,'0')}`);
+    lbl.position.set(0,RKH+0.5,0); grp.add(lbl);
 
-    // Label
-    const lbl=makeLabel(`VS-${String(i+1).padStart(2,'0')}`);
-    lbl.position.set(0,RKH+0.45,0); grp.add(lbl);
-
-    scene.add(grp); rackGroups.push(grp); S.rackMeshes.push(body);
+    scene.add(grp); rackGroups.push(grp); S.rackMeshes.push(frame);
   });
 }
 
@@ -358,51 +433,107 @@ function makeLabel(text){
 }
 
 function buildPrimary(){
-  const grp=new THREE.Group(); grp.position.set(0,0,-9.5);
-  const PW=1.4,PH=2.6,PD=1.1;
+  const grp=new THREE.Group(); grp.position.set(0,0,-10.5);
+  const PW=1.8,PH=3.0,PD=1.4;
+  
+  // Imposing monolith core
   const body=new THREE.Mesh(
     new THREE.BoxGeometry(PW,PH,PD),
-    new THREE.MeshStandardMaterial({color:0x1a1c22,roughness:0.5,metalness:0.75})
+    new THREE.MeshStandardMaterial({color:0x080a0e,roughness:0.2,metalness:0.9})
   );
   body.position.y=PH/2; body.castShadow=true; grp.add(body);
 
-  // White accent lines
-  const am=new THREE.MeshBasicMaterial({color:0x9a9da4});
-  [0.5,1.0,1.5,2.0,2.3].forEach(y=>{
-    const a=new THREE.Mesh(new THREE.BoxGeometry(PW+0.02,0.015,PD+0.02),am);
+  // Glowing processing core slots
+  const am=new THREE.MeshBasicMaterial({color:0x58a6ff});
+  for(let y=0.5;y<2.8;y+=0.3){
+    const a=new THREE.Mesh(new THREE.BoxGeometry(PW+0.04,0.04,PD+0.04),am);
     a.position.y=y; grp.add(a);
-  });
+  }
 
-  const lbl=makeLabel('PRIMARY');
-  lbl.position.set(0,PH+0.45,0); grp.add(lbl);
+  const lbl=makeLabel('[ PRIMARY CORE ]');
+  lbl.position.set(0,PH+0.8,0); lbl.scale.set(1.4,0.3,1); grp.add(lbl);
 
-  const pl=new THREE.PointLight(0xd0d4dc,2,8);
-  pl.position.set(0,PH+1,-9.5); scene.add(pl);
+  const pl=new THREE.PointLight(0x58a6ff,3,12);
+  pl.position.set(0,PH/2,-9.5); scene.add(pl);
   scene.add(grp);
 }
 
-// ── Update racks from data ──
+// ── Update Racks and Data Flow ──
+const dataParticles = [];
+const particleGeo = new THREE.PlaneGeometry(0.1, 0.1);
+const particleMat = new THREE.MeshBasicMaterial({color:0x58a6ff, side:THREE.DoubleSide, transparent:true, blending:THREE.AdditiveBlending});
+
+function spawnPacket(start, end, colorHex) {
+  const p = new THREE.Mesh(particleGeo, new THREE.MeshBasicMaterial({color:colorHex, transparent:true, blending:THREE.AdditiveBlending}));
+  p.position.copy(start);
+  scene.add(p);
+  dataParticles.push({mesh:p, s:start.clone(), e:end.clone(), t:0, speed:0.02+Math.random()*0.02});
+}
+
 function updateRacks(){
   S.servers.forEach((srv,i)=>{
     if(i>=rackGroups.length)return;
     const col=statusColor(srv);
     if(rackLights[i])rackLights[i].color.setHex(col);
     if(rackLEDs[i])rackLEDs[i].material.color.setHex(col);
-    const grp=rackGroups[i];
-    grp.children.forEach(c=>{
+    
+    // Spawn data packet flowing towards primary server (-10.5 z)
+    if(Math.random() < 0.3) {
+      const gPos = new THREE.Vector3();
+      rackGroups[i].getWorldPosition(gPos);
+      gPos.y = 0.1; // floor level conduit
+      const primPos = new THREE.Vector3(0, 0.1, -10.5);
+      spawnPacket(gPos, primPos, col);
+    }
+  });
+}
+
+function setOfflineState(){
+  // Turn all rack lights to dark red/grey
+  rackGroups.forEach((grp, i) => {
+    if(rackLights[i]) rackLights[i].color.setHex(0x331111);
+    if(rackLEDs[i]) rackLEDs[i].material.color.setHex(0x331111);
+    grp.children.forEach(c => {
       if(c.geometry?.type==='BoxGeometry'&&c.position.y>2.2&&c.material?.type==='MeshBasicMaterial')
-        c.material.color.setHex(col);
+        c.material.color.setHex(0x331111);
     });
   });
+  
+  // Stop blinking and make dark
+  blinkers.forEach(b => {
+    b.m.material.color.setHex(0x111111);
+    b.speed = 0; // stop blinking
+  });
+
+  document.getElementById('ps-body').innerHTML=
+    `<div style="color:var(--red);font-family:var(--fm);font-size:.7rem;text-align:center;margin-top:20px;letter-spacing:.2em;">
+      [ CONNECTION LOST ]<br><br>
+      <span style="font-size:.5rem;color:var(--txt3)">PRIMARY DATACENTER OFFLINE</span>
+    </div>`;
+  
+  document.getElementById('h-host').innerHTML=`<b style="color:var(--red)">OFFLINE</b>`;
+  
+  if(S.selectedIdx >= 0) {
+    document.getElementById('sdp-body').innerHTML = `<div style="color:var(--red);text-align:center;margin-top:20px;">NODE UNREACHABLE</div>`;
+    document.getElementById('sdp-meta').innerHTML = `<span class="dbadge b-cr">OFFLINE</span>`;
+  }
 }
 
 // ── Raycasting ──
 const raycaster=new THREE.Raycaster();
 const mouse=new THREE.Vector2();
 
+function updateMouse(x, y) {
+  mouse.x=(x/window.innerWidth)*2-1;
+  mouse.y=-(y/window.innerHeight)*2+1;
+}
+
+window.addEventListener('touchstart', e=>{
+  if(e.touches.length > 0) updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+}, {passive:true});
+
 window.addEventListener('mousemove',e=>{
-  mouse.x=(e.clientX/window.innerWidth)*2-1;
-  mouse.y=-(e.clientY/window.innerHeight)*2+1;
+  updateMouse(e.clientX, e.clientY);
   raycaster.setFromCamera(mouse,camera);
   const hits=raycaster.intersectObjects(scene.children,true);
   const hit=hits.find(h=>h.object.userData?.type==='rack');
@@ -477,25 +608,25 @@ function renderPrimary(){
   const h=S.host; if(!h)return;
   document.getElementById('h-host').innerHTML=`<b>${h.name}</b> · ${h.os} · ${h.cpu_phys}P/${h.cpu_cores}L · ${h.nic_name||''}`;
   const mk=(l,v,pct,c)=>
-    `<div class="prow"><span class="plab">${l}</span><span class="pval" style="color:${c}">${v}</span></div>
-     <div class="pbar"><div class="pbf" style="width:${Math.min(100,pct)}%;background:${c}"></div></div>`;
+    `<div class="prow"><span class="plab">${l}</span><span class="pval" style="color:${c}; text-shadow:0 0 8px ${c}40">${v}</span></div>
+     <div class="pbar"><div class="pbf" style="width:${Math.min(100,pct)}%;background:${c};color:${c}"></div></div>`;
   document.getElementById('ps-body').innerHTML=
-    mk('CPU',h.cpu_pct.toFixed(1)+'%',h.cpu_pct,valColor(h.cpu_pct,70,90))+
-    `<div style="font-size:.48rem;color:var(--txt3);margin-bottom:2px">${h.cpu_freq_mhz} MHz</div>`+
-    mk('Memory',h.mem_pct.toFixed(1)+'%',h.mem_pct,valColor(h.mem_pct,75,90))+
-    `<div style="font-size:.48rem;color:var(--txt3);margin-bottom:2px">${h.mem_used_gb}/${h.mem_total_gb} GB</div>`+
-    mk('Temperature',h.temp_c.toFixed(1)+'°C',h.temp_c,valColor(h.temp_c,65,85))+
-    mk('Power',h.power_w+'W',Math.min(100,h.power_w/0.55),'var(--txt2)')+
-    mk('Upload',h.upload_mbps.toFixed(2)+' Mbps',Math.min(100,h.upload_mbps*5),'var(--txt2)')+
-    mk('Download',h.download_mbps.toFixed(2)+' Mbps',Math.min(100,h.download_mbps*5),'var(--txt2)')+
-    mk('Disk',h.disk_pct.toFixed(1)+'%',h.disk_pct,valColor(h.disk_pct,75,90))+
-    `<div style="font-size:.48rem;color:var(--txt3);margin-bottom:2px">${h.disk_used_gb}/${h.disk_total_gb} GB</div>`+
-    `<div class="prow" style="margin-top:4px;border-top:1px solid var(--border);padding-top:5px">
-      <span class="plab">Health</span>
+    mk('CPU Utilization',h.cpu_pct.toFixed(1)+'%',h.cpu_pct,valColor(h.cpu_pct,70,90))+
+    `<div style="font-size:.5rem;color:var(--txt3);margin-bottom:6px;text-align:right">${h.cpu_freq_mhz} MHz</div>`+
+    mk('System Memory',h.mem_pct.toFixed(1)+'%',h.mem_pct,valColor(h.mem_pct,75,90))+
+    `<div style="font-size:.5rem;color:var(--txt3);margin-bottom:6px;text-align:right">${h.mem_used_gb}/${h.mem_total_gb} GB</div>`+
+    mk('Core Temp',h.temp_c.toFixed(1)+'°C',h.temp_c,valColor(h.temp_c,65,85))+
+    mk('Power Draw',h.power_w+'W',Math.min(100,h.power_w/0.55),'var(--txt2)')+
+    mk('Net Upload',h.upload_mbps.toFixed(2)+' Mbps',Math.min(100,h.upload_mbps*5),'#58a6ff')+
+    mk('Net Download',h.download_mbps.toFixed(2)+' Mbps',Math.min(100,h.download_mbps*5),'#3b82c4')+
+    mk('Disk I/O',h.disk_pct.toFixed(1)+'%',h.disk_pct,valColor(h.disk_pct,75,90))+
+    `<div style="font-size:.5rem;color:var(--txt3);margin-bottom:6px;text-align:right">${h.disk_used_gb}/${h.disk_total_gb} GB</div>`+
+    `<div class="prow" style="margin-top:8px;border-top:1px dashed rgba(88,166,255,0.2);padding-top:8px">
+      <span class="plab">System Health</span>
       <span class="pval" style="color:${h.health>=70?'var(--green)':h.health>=40?'var(--amber)':'var(--red)'}">${h.health} / 100</span>
     </div>
     <div class="prow">
-      <span class="plab">Failure Risk</span>
+      <span class="plab">Predictive Failure Risk</span>
       <span class="pval" style="color:${valColor(h.failure_risk,30,60)}">${h.failure_risk}%</span>
     </div>`;
 }
@@ -525,6 +656,12 @@ async function fetchData(){
     const r=await fetch('/api/metrics?n=9');
     const d=await r.json();
     S.host=d.host; S.servers=d.servers;
+    
+    // Restore blinker speed if they were offline
+    if (blinkers.length > 0 && blinkers[0].speed === 0) {
+      blinkers.forEach(b => b.speed = 1+Math.random()*3);
+    }
+
     updateRacks(); renderPrimary();
     if(S.selectedIdx>=0)openPanel(S.selectedIdx);
     document.getElementById('conn-dot').className='status-dot live';
@@ -532,6 +669,7 @@ async function fetchData(){
   }catch(e){
     document.getElementById('conn-dot').className='status-dot off';
     document.getElementById('conn-txt').textContent='Offline';
+    setOfflineState();
   }
 }
 fetchData(); setInterval(fetchData,3000);
@@ -548,23 +686,50 @@ window.addEventListener('resize',()=>{
 
 // ── Render Loop ──
 let t=0;
+const clock = new THREE.Clock();
+
 function animate(){
-  requestAnimationFrame(animate); t+=0.008;
+  requestAnimationFrame(animate); 
+  const dt = clock.getDelta();
+  t+=dt;
+  
   if(camAnim){
-    camAnim.t=Math.min(1,camAnim.t+0.025);
+    camAnim.t=Math.min(1,camAnim.t+dt*1.5);
     const e=1-Math.pow(1-camAnim.t,3);
     camera.position.lerpVectors(camAnim.sP,camAnim.eP,e);
     controls.target.lerpVectors(camAnim.sT,camAnim.eT,e);
     if(camAnim.t>=1)camAnim=null;
   }
   if(S.autoOrbit){
-    camera.position.x=Math.sin(t*0.25)*20;
-    camera.position.z=Math.cos(t*0.25)*20;
-    camera.position.y=8+Math.sin(t*0.12)*2;
-    controls.target.set(0,1.5,0);
+    camera.position.x=Math.sin(t*0.2)*25;
+    camera.position.z=Math.cos(t*0.2)*25;
+    camera.position.y=12+Math.sin(t*0.1)*3;
+    controls.target.set(0,2,0);
   }
+  
+  // Blinkers
+  blinkers.forEach(b=>{
+    b.timer += dt * b.speed;
+    if(b.timer > 1.0) {
+      b.timer = 0;
+      b.m.material.color.setHex(Math.random()>0.5 ? b.baseColor : 0x000000);
+    }
+  });
+  
+  // Data Particles
+  for(let i=dataParticles.length-1; i>=0; i--){
+    const p = dataParticles[i];
+    p.t += p.speed;
+    p.mesh.position.lerpVectors(p.s, p.e, p.t);
+    p.mesh.quaternion.copy(camera.quaternion); // billboard
+    if(p.t >= 1.0){
+      scene.remove(p.mesh);
+      dataParticles.splice(i,1);
+    }
+  }
+
   controls.update();
-  renderer.render(scene,camera);
+  composer.render(); // Use composer for Bloom!
 }
 
 buildRoom(); buildLights(); buildRacks(); buildPrimary(); animate();

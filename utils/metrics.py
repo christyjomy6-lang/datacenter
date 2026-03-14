@@ -85,13 +85,19 @@ _prev_net_stat = None
 _prev_ts = time.time()
 
 
-def _pick_best_nic(per_nic: dict) -> str | None:
-    """Pick the physical NIC with the most total traffic (bytes)."""
+def _pick_best_nic(per_nic: dict, if_stats: dict) -> str | None:
+    """Pick the physical NIC with the highest traffic that is currently UP."""
     best_name, best_bytes = None, -1
     for name, st in per_nic.items():
         nl = name.lower()
         if any(kw in nl for kw in _SKIP_KEYWORDS):
             continue
+            
+        # Must be UP to be considered
+        stat = if_stats.get(name)
+        if stat and not stat.isup:
+            continue
+            
         total = st.bytes_sent + st.bytes_recv
         if total > best_bytes:
             best_bytes = total
@@ -112,10 +118,30 @@ def _get_network() -> dict:
     elapsed = max(0.001, now_ts - _prev_ts)
 
     per_nic = psutil.net_io_counters(pernic=True)
+    try:
+        if_stats = psutil.net_if_stats()
+    except Exception:
+        if_stats = {}
 
-    # Choose best NIC (sticky – don't flicker between adapters)
-    if _prev_net_nic is None or _prev_net_nic not in per_nic:
-        _prev_net_nic = _pick_best_nic(per_nic)
+    # Check if the currently sticky NIC is still UP
+    current_up = False
+    if _prev_net_nic and _prev_net_nic in if_stats:
+        current_up = if_stats[_prev_net_nic].isup
+
+    # Choose best NIC if we don't have one, or the current one went down
+    if _prev_net_nic is None or _prev_net_nic not in per_nic or not current_up:
+        _prev_net_nic = _pick_best_nic(per_nic, if_stats)
+        
+        # We just switched NICs, speeds can't be reliably calculated this tick
+        _prev_net_stat = per_nic.get(_prev_net_nic) if _prev_net_nic else None
+        _prev_ts = now_ts
+        return {
+            "upload_mbps":   0.0,
+            "download_mbps": 0.0,
+            "pkts_sent":     _prev_net_stat.packets_sent if _prev_net_stat else 0,
+            "pkts_recv":     _prev_net_stat.packets_recv if _prev_net_stat else 0,
+            "nic_name":      _prev_net_nic or "OFFLINE",
+        }
 
     now_stat  = per_nic.get(_prev_net_nic) if _prev_net_nic else None
     prev_stat = _prev_net_stat
@@ -137,7 +163,7 @@ def _get_network() -> dict:
         "download_mbps": max(0.0, download),
         "pkts_sent":     pkts_sent,
         "pkts_recv":     pkts_recv,
-        "nic_name":      _prev_net_nic or "unknown",
+        "nic_name":      _prev_net_nic or "OFFLINE",
     }
 
 
@@ -193,9 +219,14 @@ def get_host_metrics() -> dict:
     disk_used_gb  = round(disk.used  / 1e9, 1)
 
     net = _get_network()
+    nic_down = (net["nic_name"] in ["OFFLINE", "unknown", None])
 
     power = _compute_power(cpu_pct, temp)
     risk  = _compute_failure_risk(cpu_pct, mem_pct, temp)
+    
+    if nic_down:
+        risk = min(100.0, risk + 50.0) # Network link down is critical
+        
     health= _compute_health(cpu_pct, mem_pct, temp, disk_pct, risk)
 
     return {
