@@ -17,5 +17,5 @@ echo.
 echo  [ Launching GOD-EYE at http://localhost:8000 ]
 echo.
 start "" "http://localhost:8000"
-py cyber_api.py
+py main.py
 pause
