@@ -10,7 +10,6 @@ Fixes for Windows accuracy:
 import time
 import psutil
 import platform
-import numpy as np
 
 # ── WMI temperature (Windows only) ───────────────────────────────────────────
 _wmi_conn = None
@@ -30,7 +29,7 @@ def _wmi_temperature() -> float | None:
         if zones:
             # Convert: raw value is in tenths of Kelvin
             temps = [(z.CurrentTemperature / 10.0) - 273.15 for z in zones]
-            return round(float(np.mean(temps)), 1)
+            return round(float(sum(temps) / len(temps)), 1)
     except ImportError:
         # WMI module not installed (e.g., on Linux/Render)
         pass
@@ -59,11 +58,11 @@ def _get_temperature() -> float:
                 if key in temps:
                     readings = [e.current for e in temps[key] if e.current]
                     if readings:
-                        return round(float(np.mean(readings)), 1)
+                        return round(float(sum(readings) / len(readings)), 1)
             for entries in temps.values():
                 readings = [e.current for e in entries if e.current]
                 if readings:
-                    return round(float(np.mean(readings)), 1)
+                    return round(float(sum(readings) / len(readings)), 1)
     except Exception:
         pass
 

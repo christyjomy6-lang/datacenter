@@ -5,8 +5,8 @@ real hardware stats using AI-weighted variation (Gaussian noise + learned offset
 Uses scikit-learn's IsolationForest to score anomaly likelihood per server.
 """
 
-import numpy as np
-from sklearn.ensemble import IsolationForest
+import random
+import math
 
 # ── seeded RNG so per-slot personalities are stable across refreshes ──────────
 _personalities = {}  # slot_id → {"cpu_bias", "mem_bias", "temp_bias", "net_bias"}
@@ -16,13 +16,14 @@ def _get_personality(slot_id: int) -> dict:
     """Each virtual server has a persistent 'personality' – fixed biases that
     mimic different workload profiles (idle node, compute-heavy, network-heavy)."""
     if slot_id not in _personalities:
-        rng = np.random.default_rng(slot_id * 42 + 7)
+        # Use Python's built-in random module to seeded random
+        rng = random.Random(slot_id * 42 + 7)
         _personalities[slot_id] = {
-            "cpu_bias":  float(rng.uniform(-8, 8)),
-            "mem_bias":  float(rng.uniform(-5, 5)),
-            "temp_bias": float(rng.uniform(-4, 4)),
-            "net_bias":  float(rng.uniform(-2, 2)),
-            "disk_bias": float(rng.uniform(-3, 3)),
+            "cpu_bias":  rng.uniform(-8, 8),
+            "mem_bias":  rng.uniform(-5, 5),
+            "temp_bias": rng.uniform(-4, 4),
+            "net_bias":  rng.uniform(-2, 2),
+            "disk_bias": rng.uniform(-3, 3),
             "role":      rng.choice(["Compute", "Storage", "Network", "DB", "App"]),
         }
     return _personalities[slot_id]
@@ -57,23 +58,20 @@ def _compute_health(cpu: float, mem: float, temp: float, disk: float, risk: floa
     return max(0, min(100, round(100 - penalty)))
 
 
-# ── IsolationForest anomaly scoring ──────────────────────────────────────────
-_if_model = IsolationForest(n_estimators=50, contamination=0.1, random_state=42)
-_if_fitted = False
-
-
-def _anomaly_score(feature_matrix: np.ndarray) -> np.ndarray:
-    """Return per-row anomaly probability (0–100). Higher = more anomalous."""
-    global _if_fitted
-    if feature_matrix.shape[0] < 2:
-        return np.zeros(feature_matrix.shape[0])
-    if not _if_fitted or feature_matrix.shape[0] >= 5:
-        _if_model.fit(feature_matrix)
-        _if_fitted = True
-    raw = _if_model.score_samples(feature_matrix)   # negative; lower = more anomalous
-    # Normalize to 0–100 probability-like score
-    normalized = (raw - raw.min()) / (raw.max() - raw.min() + 1e-9)
-    return np.round((1 - normalized) * 100, 1)
+# ── Lightweight heuristic anomaly scoring ────────────────────────────────────
+def _anomaly_score(cpu: float, mem: float, temp: float, disk: float) -> float:
+    """Return an anomaly probability (0–100) using a lightweight heuristic instead of ML."""
+    score = 0.0
+    # Add score for high utilization and temps
+    if cpu > 80: score += (cpu - 80) * 1.5
+    if mem > 85: score += (mem - 85) * 2.0
+    if temp > 80: score += (temp - 80) * 1.2
+    if disk > 90: score += (disk - 90) * 1.0
+    
+    # Add some random noise for "unexplainable" anomalies
+    noise = random.uniform(0, 5)
+    
+    return min(100.0, max(0.0, round(score + noise, 1)))
 
 
 # ── public API ────────────────────────────────────────────────────────────────
@@ -86,22 +84,22 @@ def generate_virtual_servers(host: dict, n: int = 9) -> list[dict]:
     Gaussian noise, making them feel like distinct machines with believable
     load patterns.
     """
-    rng = np.random.default_rng()  # new seed per call for live variation
+    rng = random.Random()  # new seed per call for live variation
 
     servers = []
-    feature_rows = []
 
     for i in range(n):
         p    = _get_personality(i)
         slot = i + 1  # 1-indexed slot label
 
         # ── base values = host + personality bias + live noise ─────────────
-        cpu  = _clamp(host["cpu_pct"]      + p["cpu_bias"]  + rng.normal(0, 2.5), 0, 100)
-        mem  = _clamp(host["mem_pct"]      + p["mem_bias"]  + rng.normal(0, 1.5), 0, 100)
-        temp = _clamp(host["temp_c"]       + p["temp_bias"] + rng.normal(0, 1.0), 25, 105)
-        ul   = _clamp(host["upload_mbps"]  + p["net_bias"]  + rng.normal(0, 0.5),  0, 10000)
-        dl   = _clamp(host["download_mbps"]+ p["net_bias"]  + rng.normal(0, 0.5),  0, 10000)
-        disk = _clamp(host["disk_pct"]     + p["disk_bias"] + rng.normal(0, 1.0),  0, 100)
+        # Implement normal variate using random.gauss
+        cpu  = _clamp(host["cpu_pct"]      + p["cpu_bias"]  + rng.gauss(0, 2.5), 0, 100)
+        mem  = _clamp(host["mem_pct"]      + p["mem_bias"]  + rng.gauss(0, 1.5), 0, 100)
+        temp = _clamp(host["temp_c"]       + p["temp_bias"] + rng.gauss(0, 1.0), 25, 105)
+        ul   = _clamp(host["upload_mbps"]  + p["net_bias"]  + rng.gauss(0, 0.5),  0, 10000)
+        dl   = _clamp(host["download_mbps"]+ p["net_bias"]  + rng.gauss(0, 0.5),  0, 10000)
+        disk = _clamp(host["disk_pct"]     + p["disk_bias"] + rng.gauss(0, 1.0),  0, 100)
 
         power = _compute_power(cpu, temp)
         risk  = _compute_failure_risk(cpu, mem, temp)
@@ -111,7 +109,7 @@ def generate_virtual_servers(host: dict, n: int = 9) -> list[dict]:
         pkts_sent = int(host["pkts_sent"] * (ul / max(host["upload_mbps"], 0.001)) * rng.uniform(0.85, 1.15))
         pkts_recv = int(host["pkts_recv"] * (dl / max(host["download_mbps"], 0.001)) * rng.uniform(0.85, 1.15))
 
-        feature_rows.append([cpu, mem, temp, ul, dl, disk])
+        anomaly_score = _anomaly_score(cpu, mem, temp, disk)
 
         servers.append({
             "id":           slot,
@@ -128,12 +126,7 @@ def generate_virtual_servers(host: dict, n: int = 9) -> list[dict]:
             "disk_pct":     round(disk, 1),
             "failure_risk": risk,
             "health":       health,
+            "anomaly_score": float(anomaly_score),
         })
-
-    # Attach AI anomaly scores
-    feat_matrix = np.array(feature_rows)
-    anomaly_scores = _anomaly_score(feat_matrix)
-    for i, s in enumerate(servers):
-        s["anomaly_score"] = float(anomaly_scores[i])
 
     return servers
